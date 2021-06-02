@@ -91,10 +91,10 @@ function outputMessage(message){
 function announceUser(message){
     const div=document.createElement('div');
     div.classList.add('message');
-    div.innerHTML=`<p class="meta">${message.username} <span><i>${message.time}</i></span></p>
-    <p class="text">
+    div.innerHTML=`<p class="meta">${message.username} <span>${message.time}</span></p>
+    <p class="text"><i>
         ${message.text}
-    </p>`;
+    </i></p>`;
     document.querySelector(".chat-messages").appendChild(div);
 }
 
@@ -119,6 +119,19 @@ function GeneratePair(){
     return pub_key;
 }
 
+//Decrypt with private key
+function priv_Decrypt(text){
+    var data_ue=crypto.privateDecrypt(ls.getItem('Private_Key'),Buffer.from(text,'base64'));
+    return data_ue.toString('utf8');
+}
+
+//Encrypt with public key
+function pub_Encrypt(text,pub_key){
+    var buffer = Buffer.from(text);
+    var data_e=crypto.publicEncrypt(pub_key,buffer);
+    return data_e.toString('base64'); 
+}
+
 //Encrypt the messages with aes-256-cbc encryption
 function encrypt(text) {
     let key=String_to_Array(ls.getItem('key'));
@@ -141,18 +154,7 @@ function decrypt(text) {
     return decrypted.toString();
 }
 
-//Decrypt with private key
-function priv_Decrypt(text){
-    var data_ue=crypto.privateDecrypt(ls.getItem('Private_Key'),Buffer.from(text,'base64'));
-    return data_ue.toString('utf8');
-}
 
-//Encrypt with public key
-function pub_Encrypt(text,pub_key){
-    var buffer = Buffer.from(text);
-    var data_e=crypto.publicEncrypt(pub_key,buffer);
-    return data_e.toString('base64'); 
-}
 
 //generate thread key
 function generate_thread_key(){

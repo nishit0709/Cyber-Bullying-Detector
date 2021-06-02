@@ -32847,10 +32847,10 @@ function outputMessage(message){
 function announceUser(message){
     const div=document.createElement('div');
     div.classList.add('message');
-    div.innerHTML=`<p class="meta">${message.username} <span><i>${message.time}</i></span></p>
-    <p class="text">
+    div.innerHTML=`<p class="meta">${message.username} <span>${message.time}</span></p>
+    <p class="text"><i>
         ${message.text}
-    </p>`;
+    </i></p>`;
     document.querySelector(".chat-messages").appendChild(div);
 }
 

@@ -1,11 +1,16 @@
 const path=require('path');
-const http=require('http');
+const fs = require('fs');
+const https=require('https');
 const express=require('express');
 const socketio=require('socket.io');
 const formatMessage=require('./utils/messages');
 const {userJoin,getCurrentUser,userLeave,getRoomUsers,get_socket_id,need_key}=require('./utils/users');
+const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+  };
 const app=express();
-const server=http.createServer(app);
+const server=https.createServer(options,app);
 const io=socketio(server);
 //set statc folder
 app.use(express.static(path.join(__dirname,'public')));
