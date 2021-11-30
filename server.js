@@ -5,7 +5,7 @@ const io = require('socket.io')(server);
 
 const path = require('path');
 const formatMessage = require('./utils/messages');
-const {userJoin,getCurrentUser,userLeave,getRoomUsers,get_socket_id,need_key,warning}=require('./utils/users');
+const {userJoin,getCurrentUser,userLeave,getRoomUsers,get_socket_id,need_key,users}=require('./utils/users');
 
 var {PythonShell} = require('python-shell');
 
@@ -54,24 +54,27 @@ io.on('connection',(socket)=>{
     })
 
     socket.on('reportMessage',(data)=>{
-        PythonShell.run('./bullyDetector.py', {args:data.message}, function (err, results) {
+        const messageData = "Your are warned against engaging in bullying"
+        const username = data.username;
+        const room = data.room;
+        const message =  data.message;       
+        const index= users.findIndex(user=> user.room===room && user.username===username);
+        PythonShell.run('utils/bullyDetector.py', {args:message}, function (err, results) {
             if (err) throw err;
-            if(results[0]){
-                const messageData = "Your are warned against engaging in bullying"
-                var user = warning(data.username,data.room)
-                console.log(user)
-                console.log('Offensive')
-                if(user.warning > 3){
-                    //kick
-                    console.log("Kick user")
-                }
-                socket.to(user.id).emit('warning', messageData);
-            } else {
-                console.log("Not Offensive")
+            if(results[0] == 1){
+                console.log("Offensive")
+                var t = users[index].warning
+                users[index].warning = ++t ;
+                console.log("Sending Warning")
+                io.to(users[index].id).emit('warning',messageData)
+            }else{
+                console.log("Non Offensive");
             }
-        });        
+            if(users[index].warning > 3){
+                io.to(users[index].id).emit('banned')
+            }
+        })
     })
-
 })
 
 const PORT=3000;

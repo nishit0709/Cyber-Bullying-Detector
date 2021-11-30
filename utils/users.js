@@ -1,3 +1,5 @@
+var {PythonShell} = require('python-shell');
+
 const users=[];
 var room_count=[0,0,0];
 
@@ -56,11 +58,25 @@ function get_socket_id(room){
     return users[index].id;
 }
 
-function warning(username,room){
-    const index=users.findIndex(user=> user.room===room && user.username===username);
-    var t = users[index].warning
-    users[index].warning = ++t ;
-    return users[index]
+
+async function warning(data){
+    const username = data.username;
+    const room = data.room;
+    const message =  data.message;       
+    const index= await users.findIndex(user=> user.room===room && user.username===username);
+    PythonShell.run('utils/bullyDetector.py', {args:message}, function (err, results) {
+        if (err) throw err;
+        if(results[0] == 1){
+            console.log("Offensive")
+            var t = users[index].warning
+            users[index].warning = ++t ;
+            return users[index]
+        }else{
+            console.log("Non Offensive")
+            return NaN
+        }
+
+    });      
 }
 
 
@@ -72,6 +88,6 @@ module.exports={
     getRoomUsers,
     get_socket_id,
     need_key,
-    warning
+    users,
 }
 

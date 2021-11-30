@@ -34797,7 +34797,10 @@ socket.on('warning',(msg)=>{
     announceUser(message)
 })
 
-
+socket.on('banned',()=>{
+    alert("You are banned from the room")
+    window.location.replace("/")
+})
 
 //message submit
 chatForm.addEventListener('submit',function(e){
@@ -34812,13 +34815,15 @@ chatForm.addEventListener('submit',function(e){
 
 chats.addEventListener('click',function(e){
     e.preventDefault();
-    data = String(e.target.alt).split(",")
-    socket.emit('reportMessage',({
-        message: data[0],
-        username: data[1],
-        room: data[2],
-    }))
-    alert("Reported")
+    if(e.target.id == 'report'){
+        data = String(e.target.alt).split(",")
+        socket.emit('reportMessage',({
+            message: data[0],
+            username: data[1],
+            room: data[2],
+        }))
+        alert("Reported")
+    }
 })
 
 
@@ -34826,11 +34831,13 @@ chats.addEventListener('click',function(e){
 function outputMessage(message){
     let d_mesg=decrypt(message.text);
     const div=document.createElement('div');
+    var sameUser = ""
+    if(message.username==user_data.username) sameUser = "hidden";
     div.classList.add('message');
     div.innerHTML=`<p class="meta">
                         ${message.username} &nbsp&nbsp<span>${message.time}</span>
                         <span class="options">
-                            <img id="msgReport" src="/css/report.png" alt="${d_mesg},${message.username},${user_data.room}">
+                            <img id="report" src="/css/report.png" alt="${d_mesg},${message.username},${user_data.room}"  ${sameUser}>
                         <span>
                     </p>
                     <p class="text">
