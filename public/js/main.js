@@ -1,8 +1,10 @@
 const socket=io();
+const { time } = require('console');
 const crypto = require('crypto');
 const rsa=require('node-rsa');
 ls = window.sessionStorage;
 const chatForm=document.getElementById('chat-form');
+const chats = document.getElementById('chats')
 const chatMessages=document.querySelector('.chat-messages');
 const roomName=document.getElementById('room-name');
 const userList=document.getElementById('users');
@@ -64,6 +66,19 @@ socket.on('announce',(msg)=>{
     chatMessages.scrollTop=chatMessages.scrollHeight;
 })
 
+socket.on('warning',(msg)=>{
+    var date = new Date()
+    var time = date.getHours()+":"+date.getMinutes()
+    let message = {
+        username: "BOT",
+        time: time,
+        text: msg,
+    }
+    announceUser(message)
+})
+
+
+
 //message submit
 chatForm.addEventListener('submit',function(e){
     e.preventDefault();
@@ -74,15 +89,33 @@ chatForm.addEventListener('submit',function(e){
     e.target.elements.msg.focus();
 })
 
+
+chats.addEventListener('click',function(e){
+    e.preventDefault();
+    data = String(e.target.alt).split(",")
+    socket.emit('reportMessage',({
+        message: data[0],
+        username: data[1],
+        room: data[2],
+    }))
+    alert("Reported")
+})
+
+
 //Output message to DOM
 function outputMessage(message){
     let d_mesg=decrypt(message.text);
     const div=document.createElement('div');
     div.classList.add('message');
-    div.innerHTML=`<p class="meta">${message.username} <span>${message.time}</span></p>
-    <p class="text">
-        ${d_mesg}
-    </p>`;
+    div.innerHTML=`<p class="meta">
+                        ${message.username} &nbsp&nbsp<span>${message.time}</span>
+                        <span class="options">
+                            <img id="msgReport" src="/css/report.png" alt="${d_mesg},${message.username},${user_data.room}">
+                        <span>
+                    </p>
+                    <p class="text">
+                        ${d_mesg}
+                    </p>`;
     document.querySelector(".chat-messages").appendChild(div);
 }
 
@@ -91,10 +124,12 @@ function outputMessage(message){
 function announceUser(message){
     const div=document.createElement('div');
     div.classList.add('message');
-    div.innerHTML=`<p class="meta">${message.username} <span>${message.time}</span></p>
-    <p class="text"><i>
-        ${message.text}
-    </i></p>`;
+    div.innerHTML=`<p class="meta">${message.username} 
+                        <span>${message.time}</span>
+                    </p>
+                    <p class="text">
+                        <i>${message.text}</i>
+                    </p>`;
     document.querySelector(".chat-messages").appendChild(div);
 }
 
@@ -153,8 +188,6 @@ function decrypt(text) {
     decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();
 }
-
-
 
 //generate thread key
 function generate_thread_key(){

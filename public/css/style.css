@@ -103,6 +103,7 @@ a {
 	margin-bottom: 15px;
 	background-color: var(--light-color);
 	border-radius: 5px;
+	overflow-wrap: break-word;
 }
 .chat-messages .message .meta {
 	font-size: 15px;
@@ -205,3 +206,14 @@ a {
 		display: none;
 	}
 }
+
+
+.options{
+	margin-left: 40em;
+}
+.options img{
+	width: 7px;
+	height: 20px;
+}
+
+

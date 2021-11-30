@@ -1,17 +1,14 @@
-const path=require('path');
-const fs = require('fs');
-const https=require('https');
-const express=require('express');
-const socketio=require('socket.io');
-const formatMessage=require('./utils/messages');
-const {userJoin,getCurrentUser,userLeave,getRoomUsers,get_socket_id,need_key}=require('./utils/users');
-const options = {
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem')
-  };
-const app=express();
-const server=https.createServer(options,app);
-const io=socketio(server);
+const express = require("express")
+const app = express()
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+const path = require('path');
+const formatMessage = require('./utils/messages');
+const {userJoin,getCurrentUser,userLeave,getRoomUsers,get_socket_id,need_key,warning}=require('./utils/users');
+
+var {PythonShell} = require('python-shell');
+
 //set statc folder
 app.use(express.static(path.join(__dirname,'public')));
 
@@ -25,8 +22,8 @@ io.on('connection',(socket)=>{
             room: user.room,
             users: getRoomUsers(user.room)
         });
-        if(need_key(user_data.room)) io.to(socket.id).emit('Server_Response',{T_KEY:0}); 
-        else io.to(get_socket_id(user_data.room)).emit('send_T_KEY',{ 
+        if(need_key(user_data.room)) io.to(socket.id).emit('Server_Response',{T_KEY:0});
+        else io.to(get_socket_id(user_data.room)).emit('send_T_KEY',{
             ID: socket.id,
             PubKey: user_data.pub_key
         })
@@ -56,9 +53,28 @@ io.on('connection',(socket)=>{
         io.to(user.room).emit('message',formatMessage(`${user.username}`,msg));
     })
 
+    socket.on('reportMessage',(data)=>{
+        PythonShell.run('./bullyDetector.py', {args:data.message}, function (err, results) {
+            if (err) throw err;
+            if(results[0]){
+                const messageData = "Your are warned against engaging in bullying"
+                var user = warning(data.username,data.room)
+                console.log(user)
+                console.log('Offensive')
+                if(user.warning > 3){
+                    //kick
+                    console.log("Kick user")
+                }
+                socket.to(user.id).emit('warning', messageData);
+            } else {
+                console.log("Not Offensive")
+            }
+        });        
+    })
+
 })
 
-const PORT=3000||process.env.PORT;
+const PORT=3000;
 server.listen(PORT,function(){
-    console.log(`online ${PORT}`);
+    console.log(`Server running at port: ${PORT}`);
 })

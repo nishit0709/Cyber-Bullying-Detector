@@ -3,7 +3,13 @@ var room_count=[0,0,0];
 
 //join user to chat
 function userJoin(id,username,room,pub_key){
-    const user={id,username,room,pub_key};
+    const user={
+        id:id,
+        username:username,
+        room:room,
+        pub_key:pub_key,
+        warning:0
+    };
     let room_n= get_room_number(room);
     room_count[room_n]+=1;
     users.push(user);
@@ -45,10 +51,19 @@ function get_room_number(room){
 }
 
 // send socket id
-function get_socket_id(room,id){
-    const index=users.findIndex(user=> (user.room===room) && (user.id!==id));
+function get_socket_id(room){
+    const index=users.findIndex(user=> (user.room===room));
     return users[index].id;
 }
+
+function warning(username,room){
+    const index=users.findIndex(user=> user.room===room && user.username===username);
+    var t = users[index].warning
+    users[index].warning = ++t ;
+    return users[index]
+}
+
+
 
 module.exports={
     userJoin,
@@ -56,6 +71,7 @@ module.exports={
     userLeave,
     getRoomUsers,
     get_socket_id,
-    need_key
+    need_key,
+    warning
 }
 
