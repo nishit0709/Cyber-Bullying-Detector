@@ -1,7 +1,6 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-
 import re, sys
 import preprocessor as p
 from keras.preprocessing.sequence import pad_sequences
