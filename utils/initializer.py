@@ -13,7 +13,7 @@ loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 loaded_model.load_weights("Bullying Model/model.h5") #load weights 
-loaded_model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
+loaded_model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy']) 
 
 
 
