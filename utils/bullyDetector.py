@@ -6,7 +6,6 @@ import re, sys, preprocessor as p
 from keras.preprocessing.sequence import pad_sequences
 from initializer import loaded_model, tokenizer, stop_words, ps
 
-
 def regexCleaning(text):
   text = p.clean(text)
   text = re.sub('[^a-zA-Z]| {2,}',' ',text)
