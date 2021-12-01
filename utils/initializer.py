@@ -1,8 +1,10 @@
+import nltk
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 stop_words = set(stopwords.words("english"))
 from nltk.stem import PorterStemmer
 ps = PorterStemmer()
-nltk.download('stopwords')
+
 
 
 from keras.models import model_from_json
