@@ -2,7 +2,8 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
-import re, sys, preprocessor as p
+import re, sys
+import preprocessor as p
 from keras.preprocessing.sequence import pad_sequences
 from initializer import loaded_model, tokenizer, stop_words, ps
 
