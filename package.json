@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js;",
+    "install": "pip install -r python_req.txt"
   },
   "author": "me",
   "license": "ISC",
