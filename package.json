@@ -5,12 +5,7 @@
   "main": "index.js",
   "repository": "https://github.com/nishit0709/Cyber-Bullying-Detector-",
   "scripts": {
-<<<<<<< HEAD
     "start": "node server.js;"
-=======
-    "start": "node server.js;",
-    "install": "pip install -r python_req.txt"
->>>>>>> 5956eaba009ed1af62482c111584df66c08e90ae
   },
   "author": "Nishit Pandit",
   "license": "ISC",
