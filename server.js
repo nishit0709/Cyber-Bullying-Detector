@@ -12,12 +12,6 @@ var {PythonShell} = require('python-shell');
 //set statc folder
 app.use(express.static(path.join(__dirname,'public')));
 
-//Load Python Dependencies
-PythonShell.runString('pip install -r requirements.txt', null, function (err) {
-    if (err) throw err;
-    console.log('Python Dependencies loaded');
-  });
-
 //run when client connects
 io.on('connection',(socket)=>{
     socket.on('joinRoom',(user_data)=>{
