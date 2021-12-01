@@ -58,21 +58,23 @@ io.on('connection',(socket)=>{
         const room = data.room;
         const message =  data.message;       
         const index= users.findIndex(user=> user.room===room && user.username===username);
-        PythonShell.run('utils/bullyDetector.py', {args:message}, function (err, results) {
-            if (err) throw err;
-            if(results[0] == 1){
-                console.log("Offensive")
-                var t = users[index].warning
-                users[index].warning = ++t ;
-                console.log("Sending Warning")
-                io.to(users[index].id).emit('warning',messageData)
-            }else{
-                console.log("Non Offensive");
-            }
-            if(users[index].warning > 3){
-                io.to(users[index].id).emit('banned')
-            }
-        })
+        if(index!=-1){
+            PythonShell.run('utils/bullyDetector.py', {args:message}, function (err, results) {
+                if (err) throw err;
+                if(results[0] == 1){
+                    console.log("Offensive")
+                    var t = users[index].warning
+                    users[index].warning = ++t ;
+                    console.log("Sending Warning")
+                    io.to(users[index].id).emit('warning',messageData)
+                }else{
+                    console.log("Non Offensive");
+                }
+                if(users[index].warning > 3){
+                    io.to(users[index].id).emit('banned')
+                }
+            })
+        }
     })
 })
 

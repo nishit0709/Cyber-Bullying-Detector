@@ -19,8 +19,10 @@ def regexCleaning(text):
     pass
 
 def output(sentence):
-  sentence = regexCleaning(sentence)
-  sentence = [sentence]
+  sentence = [regexCleaning(sentence)]
+  if(None in sentence):
+    print(0)
+    return
   seq = tokenizer.texts_to_sequences(sentence)
   seq_padded = pad_sequences(seq, maxlen=50, truncating="post", padding="post")
   prediction = (loaded_model.predict(seq_padded) > 0.5).astype("int32")
