@@ -14,10 +14,12 @@ The problem statement is to design a model which can effectively detect bullies 
 5. Run the server by executing `npm run start` 
 
 ## Output
-- Neural Network Layers 
+- Neural Network Layers  
 ![DL network layers](./output/dl_layers.png "DL Network Layers")
+
 - Neural Network Accuracy
 ![NN accuracy](./output/accuracy_graph.png "Accuracy Graph")
+
 - Chat system demonstation
 ![Image 1](./output/image_1.png "Victim")
 ![Image 2](./output/image_2.png "Bully")
