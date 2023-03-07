@@ -17,9 +17,9 @@ The problem statement is to design a model which can effectively detect bullies 
 - Neural Network Layers  
 ![DL network layers](./output/dl_layers.png "DL Network Layers")
 
-- Neural Network Accuracy
+- Neural Network Accuracy  
 ![NN accuracy](./output/accuracy_graph.png "Accuracy Graph")
 
-- Chat system demonstation
+- Chat system demonstation  
 ![Image 1](./output/image_1.png "Victim")
 ![Image 2](./output/image_2.png "Bully")
