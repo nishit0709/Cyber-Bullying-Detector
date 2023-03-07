@@ -1,4 +1,4 @@
-# Cyber-Bullying-Detector-
+# Cyber Bullying Detector
 
 ## Description
 A web-based encrypted group chat system which has the functionality of detecting instances of cyber bullying/offensive messages. The chat system uses asymmetric and symmetric cryptography to encrypt the data. A group key is used to encrypt communications and the group key is shared amongst the users using asymmetric cryptography.
